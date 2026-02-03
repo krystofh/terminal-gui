@@ -1,0 +1,19 @@
+ResultLabel {
+    height: 5;
+    margin: 1;
+    min-width: 50;
+    padding: 2;
+    text-align: center;
+}
+
+.pass {
+    background: green;
+    color: white;
+    text-style: bold;
+}
+
+.fail {
+    background: red;
+    color: white;
+    text-style: bold;
+}

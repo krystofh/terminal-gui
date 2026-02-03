@@ -1,5 +1,5 @@
 """This file gets called when someone types $ python -m your-app"""
 
-import your_app
+import terminal_gui
 
-print(your_app.__version__)
+print(terminal_gui.__version__)

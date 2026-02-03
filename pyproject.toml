@@ -3,12 +3,12 @@ requires = ["setuptools >= 68.0"]  # other build dependencies e.g. "mypy-protobu
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "your-app"
+name = "terminal-gui"
 requires-python = ">=3.10"
 description = ""
 license.text = "MIT"
 authors = [
-  {name = "Your Name", email = "your-name@email.cz"},
+  {name = "Krystof Hes", email = "krystof.hes@seznam.cz"},
 ]
 dynamic = ["version", "readme", "dependencies"]
 
@@ -16,12 +16,13 @@ dynamic = ["version", "readme", "dependencies"]
 package-dir = {"" = "src"}
 
 [tool.setuptools.dynamic]
-version = {attr = "your_app.__version__.version"}
+version = {attr = "terminal_gui.__version__.version"}
 readme = {file = ["README.md"]}
 dependencies = {file = ["requirements.txt"]}
 
 [project.scripts]
 your-entrypoint = "your_app.cli:main"
+
 
 [project.optional-dependencies]
 # extra dependencies for development
