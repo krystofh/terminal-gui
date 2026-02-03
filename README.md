@@ -1,8 +1,8 @@
-# Your Project
+# terminal-gui demo
 
-![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/katomaso/42fa616bd0516af168cf9147e7d276e1/raw/coverage.json) _(howto badge - see bellow)_
+Showcase of `textual` library for GUI directly in terminal
 
-Short description of your application or library. Longer than one sentence.
+<img src="doc/demo.png" width="500px">
 
 ## Installation
 
