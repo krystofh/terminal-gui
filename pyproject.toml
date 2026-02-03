@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools >= 68.0"]  # other build dependencies e.g. "mypy-protobuf >= 3.0.0"
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "your-app"
+requires-python = ">=3.10"
+description = ""
+license.text = "MIT"
+authors = [
+  {name = "Your Name", email = "your-name@email.cz"},
+]
+dynamic = ["version", "readme", "dependencies"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.dynamic]
+version = {attr = "your_app.__version__.version"}
+readme = {file = ["README.md"]}
+dependencies = {file = ["requirements.txt"]}
+
+[project.scripts]
+your-entrypoint = "your_app.cli:main"
+
+[project.optional-dependencies]
+# extra dependencies for development
+dev = [
+  "build",
+  "pytest",
+  "pytest-cov",
+  "twine",
+  "ruff"
+]
+# optional 'test' target if tests require more than just pytest
+# test = ["some-extra-test-dependency"]
+
+[tool.ruff]
+line-length = 100
+indent-width = 4
+
+[tool.ruff.lint]
+select = ["F", "E", "I"]  # F: pyflakes, E: pycodestyle, I: isort
+ignore = []
+exclude = ["src/*/protos/*", "tests/*"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+# tests should test installed package hence no src/ prefix anywhere
+log_cli = 1  # (dis)allow pytest to pass through logs into the main console
+
+[tool.pyright]
+# we use pyright for type checking because it is built into VScode. Preferably in
+# strict mode. You can omit single lines in code by adding # type: ignore
+include = ["src", "tests"]
+typeCheckingMode = "strict"
+# pythonVersion = "3.7"  # might be good idea to set minimal python version

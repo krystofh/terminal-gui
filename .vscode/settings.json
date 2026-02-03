@@ -1,0 +1,15 @@
+{
+    "cSpell.words": [
+        "asyncio",
+        "gira",
+        "pypi",
+        "pytest"
+    ],
+    "python.analysis.typeCheckingMode": "strict",
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    }
+}

@@ -1,0 +1,4 @@
+# Provide list of dependencies
+# some-lib ==2.1.3
+# other-lib >=2.1.3, <3.0
+
