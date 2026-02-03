@@ -16,12 +16,15 @@ MOCK_PARAGRAPH = (
 
 
 class TestResultBox(HorizontalGroup):
-    def __init__(self, *, passed: bool = False, **kwargs) -> None:
+    def __init__(self, *, passed: bool = False, serial_number: str = "123", **kwargs) -> None:
         super().__init__(**kwargs)
         self.passed = passed
+        self.serial_number = serial_number
 
     def compose(self) -> ComposeResult:
         yield ResultLabel(passed=self.passed)
+        yield SerialLabel(serial_number=self.serial_number)
+        yield PCBLabel(pcb_id="A7EB")
 
 
 class ResultLabel(Label):
@@ -49,12 +52,33 @@ class ResultLabel(Label):
             self.add_class("fail")
 
 
+class SerialLabel(Label):
+    """Serial number label with same styling as ResultLabel."""
+
+    def __init__(self, *, serial_number: str = "", **kwargs) -> None:
+        super().__init__(f"SN: {serial_number}", **kwargs)
+        self.add_class("serial")
+
+
+class PCBLabel(Label):
+    """PCB-ID number label with same styling as ResultLabel."""
+
+    def __init__(self, *, pcb_id: str = "", **kwargs) -> None:
+        super().__init__(f"PCB-ID: {pcb_id}", **kwargs)
+        self.add_class("serial")
+
+
 class TestResultPage(VerticalGroup):
     """TODO"""
 
+    def __init__(self, *, passed: bool = False, serial_number: str = "123456", **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.passed = passed
+        self.serial_number = serial_number
+
     def compose(self) -> ComposeResult:
         """Create test view"""
-        yield TestResultBox(passed=True)
+        yield TestResultBox(passed=self.passed, serial_number=self.serial_number)
         with Collapsible(title="Test information"):
             yield Static(MOCK_PARAGRAPH, expand=True)
         with Collapsible(title="Phase results", collapsed=False):
@@ -68,12 +92,13 @@ class TestViewer(App):
 
     CSS_PATH = "style.tcss"
     BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
+    TITLE = socket.gethostname()
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
-        yield Header(name=socket.gethostname(), show_clock=True, icon="⚡️")
+        yield Header(show_clock=True, icon="⚡️")
         yield Footer()
-        yield TestResultPage()
+        yield TestResultPage(passed=True, serial_number="ABCD123")
 
     def action_toggle_dark(self) -> None:
         """An action to toggle dark mode."""

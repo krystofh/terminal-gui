@@ -1,9 +1,20 @@
 ResultLabel {
     height: 5;
     margin: 1;
-    min-width: 50;
+    min-width: 30;
     padding: 2;
     text-align: center;
+}
+
+.serial {
+    height: 5;
+    margin: 1;
+    min-width: 20;
+    padding: 2;
+    text-align: center;
+    text-style: bold;
+    background: rgb(1, 54, 95);
+    color: white;
 }
 
 .pass {
