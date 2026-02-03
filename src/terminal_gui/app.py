@@ -2,6 +2,7 @@ from textual.app import App, ComposeResult
 from textual.containers import HorizontalGroup, VerticalScroll, VerticalGroup
 from textual.widget import Widget
 from textual.widgets import Button, Digits, Footer, Header, Collapsible, Label, Static
+from textual.widgets import DataTable
 from textual.reactive import reactive
 import socket
 import lorem
@@ -13,6 +14,15 @@ MOCK_PARAGRAPH = (
     "lobortis sit amet. Phasellus a magna lacus. Donec molestie vel ipsum non tristique. "
     "Cras commodo nec lorem vitae pharetra. Sed ac ipsum lectus. "
 )
+
+
+DATA = {
+    "status": "ok",
+    "count": 42,
+    "pi": 3.14159,
+    "enabled": True,
+    "items": [1, 2, 3],
+}
 
 
 class TestResultBox(HorizontalGroup):
@@ -80,7 +90,7 @@ class TestResultPage(VerticalGroup):
         """Create test view"""
         yield TestResultBox(passed=self.passed, serial_number=self.serial_number)
         with Collapsible(title="Test information"):
-            yield Static(MOCK_PARAGRAPH, expand=True)
+            yield DataTable()
         with Collapsible(title="Phase results", collapsed=False):
             yield Static(str(lorem.paragraph()))  # type: ignore
         with Collapsible(title="Errors"):
@@ -103,6 +113,21 @@ class TestViewer(App):
     def action_toggle_dark(self) -> None:
         """An action to toggle dark mode."""
         self.theme = "textual-dark" if self.theme == "textual-light" else "textual-light"
+
+    def on_mount(self) -> None:
+        table = self.query_one(DataTable)
+        table.focus()
+
+        # Define columns
+        table.add_columns("Key", "Value")
+
+        # Populate from dict
+        for key, value in DATA.items():
+            table.add_row(str(key), str(value))
+
+        # Optional nice-to-haves
+        table.cursor_type = "row"
+        table.zebra_stripes = True
 
 
 if __name__ == "__main__":
