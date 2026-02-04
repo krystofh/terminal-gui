@@ -13,8 +13,9 @@ for i in range(10):
     MOCK_PARAGRAPH += lorem.paragraph()
 
 
-# class ContentPanel(VerticalScroll):
-#     yield Static()
+class ContentPanel(VerticalScroll):
+    def compose(self) -> ComposeResult:
+        yield Static("Example text", id="content")
 
 
 class TabsApp(App):
@@ -35,11 +36,16 @@ class TabsApp(App):
         # border: tall $primary;
         content-align: center middle;
     }
+    #content {
+        padding: 1 1;
+        width: 100%;
+    }
     """
 
     def compose(self) -> ComposeResult:
         yield Tabs(*TAB_NAMES)
-        yield Label()
+        # yield Label()
+        yield ContentPanel()
         yield Footer()
 
     def on_mount(self) -> None:
@@ -47,22 +53,22 @@ class TabsApp(App):
         # self.query_one(Tabs).focus()
         self.query_children(Tabs).focus()
 
-    def update_tab_text(self, label: Label, tab_name: str):
+    def update_tab_text(self, content: Static, tab_name: str):
         if tab_name == "Logs":
-            label.update(MOCK_PARAGRAPH)
+            content.update(MOCK_PARAGRAPH)
         else:
-            label.update("Hello " + tab_name)
+            content.update("Hello " + tab_name)
 
     def on_tabs_tab_activated(self, event: Tabs.TabActivated) -> None:
         """Handle TabActivated message sent by Tabs."""
-        label = self.query_one(Label)
+        content = self.query_one("#content", Static)
         if event.tab is None:
             # When the tabs are cleared, event.tab will be None
-            label.visible = False
+            content.visible = False
         else:
-            label.visible = True
+            content.visible = True
             # label.update("Hello " + event.tab.label)
-            self.update_tab_text(label=label, tab_name=event.tab.label)
+            self.update_tab_text(content=content, tab_name=event.tab.label)
 
 
 if __name__ == "__main__":
