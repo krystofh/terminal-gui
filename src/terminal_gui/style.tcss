@@ -1,4 +1,4 @@
-ResultLabel {
+StateLabel {
     height: 5;
     margin: 1;
     min-width: 30;

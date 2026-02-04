@@ -1,19 +1,14 @@
 from textual.app import App, ComposeResult
 from textual.containers import HorizontalGroup, VerticalScroll, VerticalGroup
 from textual.widget import Widget
-from textual.widgets import Button, Digits, Footer, Header, Collapsible, Label, Static
+from textual.widgets import Button, Digits, Footer, Header, Collapsible, Label, Static, RichLog
 from textual.widgets import DataTable
 from textual.reactive import reactive
 import socket
 import lorem
 import time
 
-MOCK_PARAGRAPH = (
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed lacus in "
-    "libero dapibus auctor. Morbi at faucibus lorem. Nullam molestie erat velit, quis tempor lacus "
-    "lobortis sit amet. Phasellus a magna lacus. Donec molestie vel ipsum non tristique. "
-    "Cras commodo nec lorem vitae pharetra. Sed ac ipsum lectus. "
-)
+MOCK_PARAGRAPH = lorem.paragraph() + lorem.paragraph() + lorem.paragraph()
 
 
 DATA = {
@@ -25,19 +20,19 @@ DATA = {
 }
 
 
-class TestResultBox(HorizontalGroup):
+class TopPanel(HorizontalGroup):
     def __init__(self, *, passed: bool = False, serial_number: str = "123", **kwargs) -> None:
         super().__init__(**kwargs)
         self.passed = passed
         self.serial_number = serial_number
 
     def compose(self) -> ComposeResult:
-        yield ResultLabel(passed=self.passed)
+        yield StateLabel(passed=self.passed)
         yield SerialLabel(serial_number=self.serial_number)
         yield PCBLabel(pcb_id="A7EB")
 
 
-class ResultLabel(Label):
+class StateLabel(Label):
     """A Label that displays PASS in green or FAIL in red based on `passed`."""
 
     passed = reactive(False)
@@ -78,7 +73,7 @@ class PCBLabel(Label):
         self.add_class("serial")
 
 
-class TestResultPage(VerticalGroup):
+class TestResultPanel(VerticalScroll):
     """TODO"""
 
     def __init__(self, *, passed: bool = False, serial_number: str = "123456", **kwargs) -> None:
@@ -88,13 +83,38 @@ class TestResultPage(VerticalGroup):
 
     def compose(self) -> ComposeResult:
         """Create test view"""
-        yield TestResultBox(passed=self.passed, serial_number=self.serial_number)
+        yield TopPanel(passed=self.passed, serial_number=self.serial_number)
         with Collapsible(title="Test information"):
             yield DataTable()
         with Collapsible(title="Phase results", collapsed=False):
             yield Static(str(lorem.paragraph()))  # type: ignore
         with Collapsible(title="Errors"):
             yield Static("Errors")
+        yield Static(MOCK_PARAGRAPH)
+
+
+class MainPage(VerticalGroup):
+    """
+    TODO
+    """
+
+    def __init__(self, *, passed: bool = False, serial_number: str = "123456", **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.passed = passed
+        self.serial_number = serial_number
+
+    def compose(self) -> ComposeResult:
+        yield TopPanel(passed=self.passed, serial_number=self.serial_number)
+        yield ContentPanel()
+
+
+class ContentPanel(VerticalScroll):
+    """
+    TODO
+    """
+
+    def compose(self) -> ComposeResult:
+        yield RichLog(id="log_container", highlight=True, markup=True, max_lines=50)
 
 
 class TestViewer(App):
@@ -108,26 +128,34 @@ class TestViewer(App):
         """Create child widgets for the app."""
         yield Header(show_clock=True, icon="⚡️")
         yield Footer()
-        yield TestResultPage(passed=True, serial_number="ABCD123")
+        # yield TestResultPanel(passed=True, serial_number="ABCD123")
+        yield MainPage(passed=True, serial_number="ABCD123")
 
     def action_toggle_dark(self) -> None:
         """An action to toggle dark mode."""
         self.theme = "textual-dark" if self.theme == "textual-light" else "textual-light"
 
     def on_mount(self) -> None:
-        table = self.query_one(DataTable)
-        table.focus()
+        self.set_interval(0.1, self._log_tick)
 
-        # Define columns
-        table.add_columns("Key", "Value")
+    def _log_tick(self) -> None:
+        log = self.query_one("#log_container", RichLog)
+        log.write(f"[bold green]INFO[/] example log message @ {time.strftime('%H:%M:%S')}")
 
-        # Populate from dict
-        for key, value in DATA.items():
-            table.add_row(str(key), str(value))
+    # def on_mount(self) -> None:
+    #     table = self.query_one(DataTable)
+    #     table.focus()
 
-        # Optional nice-to-haves
-        table.cursor_type = "row"
-        table.zebra_stripes = True
+    #     # Define columns
+    #     table.add_columns("Key", "Value")
+
+    #     # Populate from dict
+    #     for key, value in DATA.items():
+    #         table.add_row(str(key), str(value))
+
+    #     # Optional nice-to-haves
+    #     table.cursor_type = "row"
+    #     table.zebra_stripes = True
 
 
 if __name__ == "__main__":
