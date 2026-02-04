@@ -25,6 +25,11 @@ class TabsApp(App):
     Tabs {
         dock: top;
     }
+
+    Tabs Tab {
+        width: 50%;
+    }
+
     Screen {
         align: center middle;
     }

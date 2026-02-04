@@ -1,16 +1,22 @@
 StateLabel {
-    height: 5;
-    margin: 1;
-    min-width: 30;
-    padding: 2;
+    height: 3;
+    margin: 0;
+    min-width: 15;
+    padding: 1;
     text-align: center;
+    text-style: bold;
+    color: white;
+}
+
+Tabs Tab {
+        width: 50%;
 }
 
 .serial {
-    height: 5;
-    margin: 1;
+    height: 3;
+    margin: 0;
     min-width: 20;
-    padding: 2;
+    padding: 1;
     text-align: center;
     text-style: bold;
     background: rgb(1, 54, 95);
@@ -19,12 +25,16 @@ StateLabel {
 
 .pass {
     background: green;
-    color: white;
-    text-style: bold;
 }
 
 .fail {
     background: red;
-    color: white;
-    text-style: bold;
+}
+
+.running {
+    background: orange;
+}
+
+.waiting {
+    background: gray;
 }
