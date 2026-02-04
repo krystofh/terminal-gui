@@ -40,15 +40,32 @@ TAB_NAMES = [
 
 
 class TopPanel(HorizontalGroup):
-    def __init__(self, *, state: TestState, serial_number: str = "123", **kwargs) -> None:
+    """Top panel showing test state and most important device info"""
+
+    def __init__(
+        self, *, state: TestState, serial_number: str = "", pcb_id: str = "", **kwargs
+    ) -> None:
         super().__init__(**kwargs)
         self.state = state
         self.serial_number = serial_number
+        self.pcb_id = pcb_id
 
     def compose(self) -> ComposeResult:
         yield StateLabel(state=self.state)
+        yield DeviceInfoPanel(serial_number=self.serial_number, pcb_id=self.pcb_id)
+
+
+class DeviceInfoPanel(VerticalGroup):
+    """Panel displaying device-related information such as SN and data matrix code"""
+
+    def __init__(self, *, serial_number: str = "123", pcb_id: str = "ABC", **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.serial_number = serial_number
+        self.pcb_id = pcb_id
+
+    def compose(self) -> ComposeResult:
         yield SerialLabel(serial_number=self.serial_number)
-        yield PCBLabel(pcb_id="A7EB")
+        yield PCBLabel(pcb_id=self.pcb_id)
 
 
 class StateLabel(Label):
@@ -80,19 +97,19 @@ class StateLabel(Label):
 
 
 class SerialLabel(Label):
-    """Serial number label with same styling as ResultLabel."""
+    """Serial number label"""
 
     def __init__(self, *, serial_number: str = "", **kwargs) -> None:
         super().__init__(f"SN: {serial_number}", **kwargs)
-        self.add_class("serial")
+        self.add_class("device_details_label")
 
 
 class PCBLabel(Label):
-    """PCB-ID number label with same styling as ResultLabel."""
+    """PCB-ID number label"""
 
     def __init__(self, *, pcb_id: str = "", **kwargs) -> None:
         super().__init__(f"PCB-ID: {pcb_id}", **kwargs)
-        self.add_class("serial")
+        self.add_class("device_details_label")
 
 
 class TestResultPanel(VerticalScroll):
@@ -125,7 +142,7 @@ class MainPage(VerticalGroup):
         self.serial_number = serial_number
 
     def compose(self) -> ComposeResult:
-        yield TopPanel(state=TestState.WAITING, serial_number=self.serial_number)
+        yield TopPanel(state=TestState.WAITING, serial_number=self.serial_number, pcb_id="DM-CODE")
         yield Tabs(*TAB_NAMES)
         yield ContentPanel()
 

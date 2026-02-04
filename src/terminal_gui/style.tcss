@@ -1,7 +1,7 @@
 StateLabel {
     height: 3;
     margin: 0;
-    min-width: 15;
+    min-width: 20;
     padding: 1;
     text-align: center;
     text-style: bold;
@@ -12,14 +12,20 @@ Tabs Tab {
         width: 50%;
 }
 
-.serial {
-    height: 3;
+DeviceInfoPanel {
+    background: rgb(1, 54, 95);
+    height: 3
+}
+
+.device_details_label {
+    height: 1;
     margin: 0;
     min-width: 20;
-    padding: 1;
-    text-align: center;
+    padding: 0;
+    padding-left: 3;
+    text-align: left;
     text-style: bold;
-    background: rgb(1, 54, 95);
+    background: transparent;
     color: white;
 }
 
